@@ -33,9 +33,9 @@ extern "C" {
 const char *_get_domain(LinphoneAccountCreator *creator);
 char* _get_identity(const LinphoneAccountCreator *creator);
 unsigned int validate_uri(const char* username, const char* domain, const char* display_name);
+const char* ha1_for_passwd(const char* username, const char* realm, const char* passwd, const char* algo);
 void reset_field (char **field);
 void fill_domain_and_algorithm_if_needed(LinphoneAccountCreator *creator);
-char *generate_random_password(void);
 
 /**
  * @addtogroup account_creator
@@ -152,30 +152,6 @@ LINPHONE_PUBLIC LinphoneAccountCreatorStatus linphone_account_creator_update_acc
 LINPHONE_PUBLIC LinphoneAccountCreatorStatus linphone_account_creator_login_linphone_account(LinphoneAccountCreator *creator);
 
 /**
- * Request an auth token to be send by the backend by push notification.
- * @param creator #LinphoneAccountCreator object @notnil
- * @return #LinphoneAccountCreatorStatusRequestOk if everything is OK, or a specific error otherwise.
- **/
-LINPHONE_PUBLIC LinphoneAccountCreatorStatus
-linphone_account_creator_request_auth_token(LinphoneAccountCreator *creator);
-
-/**
- * Request an account creation "request_token" to be used on account creations. The request_token is retrieved from the callback linphone_account_creator_cbs_get_account_creation_request_token()
- * @param creator #LinphoneAccountCreator object @notnil
- * @return #LinphoneAccountCreatorStatusRequestOk if everything is OK, or a specific error otherwise.
- **/
-LINPHONE_PUBLIC LinphoneAccountCreatorStatus
-linphone_account_creator_request_account_creation_request_token(LinphoneAccountCreator *creator);
-
-/**
- * Send a request to get a token to be used for account creation from a request_token. The token is retrieved from the callback linphone_account_creator_cbs_get_account_creation_token_using_request_token()
- * @param creator #LinphoneAccountCreator object @notnil
- * @param token the request token to check. It comes from linphone_account_creator_cbs_get_account_creation_request_token()
- * @return #LinphoneAccountCreatorStatusRequestOk if the request has been sent, #LinphoneAccountCreatorStatusRequestFailed otherwise
-**/
-LINPHONE_PUBLIC LinphoneAccountCreatorStatus linphone_account_creator_request_account_creation_token_using_request_token(LinphoneAccountCreator *creator);
-
-/**
  * Acquire a reference to the LinphoneAccountCreator.
  * @param creator #LinphoneAccountCreator object. @notnil
  * @return The same #LinphoneAccountCreator object. @notnil
@@ -225,74 +201,32 @@ LINPHONE_PUBLIC LinphoneAccountCreatorUsernameStatus linphone_account_creator_se
 LINPHONE_PUBLIC const char * linphone_account_creator_get_username(const LinphoneAccountCreator *creator);
 
 /**
- * Set the provider to be used by the backend to send the push notification to the device asking for an auth token.
+ * Set the pn_provider.
  * @param creator #LinphoneAccountCreator object @notnil
- * @param pn_provider The pn_provider to set @maybenil
+ * @param pn_provider The pn_provider to set @notnil
 **/
 LINPHONE_PUBLIC void linphone_account_creator_set_pn_provider(LinphoneAccountCreator *creator, const char* pn_provider);
 
 /**
- * Get the provider to be used by the backend to send the push notification to the device asking for an auth token.
+ * Set the pn_param.
  * @param creator #LinphoneAccountCreator object @notnil
- * @return The pn_provider set, if any @maybenil
-**/
-LINPHONE_PUBLIC const char* linphone_account_creator_get_pn_provider(const LinphoneAccountCreator *creator);
-
-/**
- * Set the param to be used by the backend to send the push notification to the device asking for an auth token.
- * @param creator #LinphoneAccountCreator object @notnil
- * @param pn_param The pn_param to set @maybenil
+ * @param pn_param The pn_param to set @notnil
 **/
 LINPHONE_PUBLIC void linphone_account_creator_set_pn_param(LinphoneAccountCreator *creator, const char* pn_param);
 
 /**
- * Get the param to be used by the backend to send the push notification to the device asking for an auth token.
+ * Set the pn_prid.
  * @param creator #LinphoneAccountCreator object @notnil
- * @return The pn_param set, if any @maybenil
-**/
-LINPHONE_PUBLIC const char* linphone_account_creator_get_pn_param(const LinphoneAccountCreator *creator);
-
-/**
- * Set the prid to be used by the backend to send the push notification to the device asking for an auth token.
- * @param creator #LinphoneAccountCreator object @notnil
- * @param pn_prid The pn_prid to set @maybenil
+ * @param pn_prid The pn_prid to set @notnil
 **/
 LINPHONE_PUBLIC void linphone_account_creator_set_pn_prid(LinphoneAccountCreator *creator, const char* pn_prid);
 
 /**
- * Get the prid to be used by the backend to send the push notification to the device asking for an auth token.
+ * Set the token.
  * @param creator #LinphoneAccountCreator object @notnil
- * @return The pn_prid set, if any @maybenil
-**/
-LINPHONE_PUBLIC const char* linphone_account_creator_get_pn_prid(const LinphoneAccountCreator *creator);
-
-/**
- * Set the authentication token received by push notification to be used to authenticate next queries, if required.
- * @param creator #LinphoneAccountCreator object @notnil
- * @param token The token to set @maybenil
+ * @param token The pn_prid to set @notnil
 **/
 LINPHONE_PUBLIC void linphone_account_creator_set_token(LinphoneAccountCreator *creator, const char* token);
-
-/**
- * Get the authentication token set (if any) to be used to authenticate next queries, if required.
- * @param creator #LinphoneAccountCreator object @notnil
- * @return The token set, if any @maybenil
-**/
-LINPHONE_PUBLIC const char* linphone_account_creator_get_token(const LinphoneAccountCreator *creator);
-
-/**
- * Set the account creation request token received to be used to check user validation.
- * @param creator #LinphoneAccountCreator object @notnil
- * @param token The token to set @maybenil
-**/
-LINPHONE_PUBLIC void linphone_account_creator_set_account_creation_request_token(LinphoneAccountCreator *creator, const char* token);
-
-/**
- * Get the account creation request token received to be used to check user validation.
- * @param creator #LinphoneAccountCreator object @notnil
- * @return The token set, if any @maybenil
-**/
-LINPHONE_PUBLIC const char* linphone_account_creator_get_account_creation_request_token(const LinphoneAccountCreator *creator);
 
 /**
  * Set the phone number normalized.
@@ -584,48 +518,6 @@ LINPHONE_PUBLIC LinphoneAccountCreatorCbsStatusCb linphone_account_creator_cbs_g
 LINPHONE_PUBLIC void linphone_account_creator_cbs_set_send_token(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorCbsStatusCb cb);
 
 /**
- * Get the callback on account creation request token.
- * In response:
- *   - "token" is the request token to used with linphone_account_creator_request_account_creation_token_using_request_token().
- *   - "validation_url" is a URL to redirect the user into a browser for validation.
- * In status:
- *   - LinphoneAccountCreatorStatusRequestOk: the request token should be in response with the validation url.
- *
- * @param cbs #LinphoneAccountCreatorCbs object. @notnil
- * @return The current request token request.
-**/
-LINPHONE_PUBLIC LinphoneAccountCreatorCbsStatusCb linphone_account_creator_cbs_get_account_creation_request_token(const LinphoneAccountCreatorCbs *cbs);
-
-/**
- * Assign a user pointer to a #LinphoneAccountCreatorCbs object.
- * @param cbs #LinphoneAccountCreatorCbs object. @notnil
- * @param cb The request token callback used.
-**/
-LINPHONE_PUBLIC void linphone_account_creator_cbs_set_account_creation_request_token(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorCbsStatusCb cb);
-
-/**
- * Get the callback on account creation token.
- * In response, "token" is the token to pass to linphone_account_creator_set_token(). It is used for linphone_account_creator_create_account()
- *
- * In status:
- *   - LinphoneAccountCreatorStatusRequestOk: token can be retrieved from the "token" field in response.
- *   - LinphoneAccountCreatorStatusRequestFailed: request token has not been validated. Recall linphone_account_creator_request_account_creation_token_using_request_token() after some time.
- *   - LinphoneAccountCreatorStatusMissingArguments: request_token has not been set from linphone_account_creator_set_token().
- *   - LinphoneAccountCreatorStatusServerError: URL is not reachable.
- *
- * @param cbs #LinphoneAccountCreatorCbs object. @notnil
- * @return The current request token request.
-**/
-LINPHONE_PUBLIC LinphoneAccountCreatorCbsStatusCb linphone_account_creator_cbs_get_account_creation_token_using_request_token(const LinphoneAccountCreatorCbs *cbs);
-
-/**
- * Assign a user pointer to a #LinphoneAccountCreatorCbs object.
- * @param cbs #LinphoneAccountCreatorCbs object. @notnil
- * @param cb The token callback used.
-**/
-LINPHONE_PUBLIC void linphone_account_creator_cbs_set_account_creation_token_using_request_token(LinphoneAccountCreatorCbs *cbs, LinphoneAccountCreatorCbsStatusCb cb);
-
-/**
  * Get the is account activated request.
  * @param cbs #LinphoneAccountCreatorCbs object. @notnil
  * @return The current is account activated request.
@@ -743,27 +635,8 @@ LINPHONE_PUBLIC void linphone_account_creator_cbs_set_login_linphone_account(Lin
  * Create and configure a proxy config and a authentication info for an account creator
  * @param creator #LinphoneAccountCreator object @notnil
  * @return A #LinphoneProxyConfig object if successful, NULL otherwise. @maybenil
- * @deprecated 05/05/2023 Use linphone_account_creator_create_account_in_core() instead.
- **/
-LINPHONE_PUBLIC LinphoneProxyConfig *
-linphone_account_creator_create_proxy_config(const LinphoneAccountCreator *creator);
-
-/**
- * Create and configure a #LinphoneAccount and a #LinphoneAuthInfo from informations set in the #LinphoneAccountCreator.
- * @param creator #LinphoneAccountCreator object @notnil
- * @return A #LinphoneAccount object if successful, NULL otherwise. @maybenil @tobefreed
- **/
-LINPHONE_PUBLIC LinphoneAccount *linphone_account_creator_create_account_in_core(const LinphoneAccountCreator *creator);
-
-
-/**
- * Require the account creator to use special "test admin account".
- * @warning The "test admin account" is a special feature required for automated test, and requires the APP_EVERYONE_IS_ADMIN
- * property to be enabled on the remote Flexisip Account Manager (FlexiAPI).
- * This feature must never be turned on for a production-stage app.
- * @param creator #LinphoneAccountCreator object @notnil
- **/
-LINPHONE_PUBLIC void linphone_account_creator_use_test_admin_account(LinphoneAccountCreator *creator);
+**/
+LINPHONE_PUBLIC LinphoneProxyConfig * linphone_account_creator_create_proxy_config(const LinphoneAccountCreator *creator);
 
 /**************/
 /* DEPRECATED */

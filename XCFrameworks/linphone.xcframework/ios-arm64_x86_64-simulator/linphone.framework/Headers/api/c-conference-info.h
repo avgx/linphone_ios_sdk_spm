@@ -84,7 +84,7 @@ LINPHONE_PUBLIC const bctbx_list_t *linphone_conference_info_get_participants(co
  * @param conference_info The #LinphoneConferenceInfo object. @notnil
  * @param participants The list of participants to set. \bctbx_list{LinphoneAddress} @maybenil
  */
-LINPHONE_PUBLIC void linphone_conference_info_set_participants(LinphoneConferenceInfo *conference_info, const bctbx_list_t *participants);
+LINPHONE_PUBLIC void linphone_conference_info_set_participants(LinphoneConferenceInfo *conference_info, bctbx_list_t *participants);
 
 /**
  * Add a participant to the conference.

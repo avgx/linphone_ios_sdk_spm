@@ -48,6 +48,7 @@
 #define MS2_DEPRECATED __attribute__ ((deprecated))
 #endif
 #endif
+#define MS_UNUSED(x) ((void)(x))
 
 #define ms_malloc	ortp_malloc
 #define ms_malloc0	ortp_malloc0
@@ -186,7 +187,7 @@ MS2_PUBLIC MS2_DEPRECATED MSList * ms_list_append(MSList *list, void * data);
  * @param list list where data should be added. If NULL, a new list will be created.
  * @param new_elem element to append
  * @return first element of the list
- * @deprecated Use bctbx_list_concat() instead
+ * @deprecated Use bctbx_list_append_link() instead
 **/
 MS2_PUBLIC MS2_DEPRECATED MSList *ms_list_append_link(MSList *list, MSList *new_elem);
 

@@ -105,34 +105,6 @@ LINPHONE_PUBLIC LinphoneCallCbsEncryptionChangedCb linphone_call_cbs_get_encrypt
 LINPHONE_PUBLIC void linphone_call_cbs_set_encryption_changed (LinphoneCallCbs *cbs, LinphoneCallCbsEncryptionChangedCb cb);
 
 /**
- * Get the send master key changed callback.
- * @param cbs #LinphoneCallCbs object. @notnil
- * @return The current send master key changed callback.
- */
-LINPHONE_PUBLIC LinphoneCallCbsSendMasterKeyChangedCb linphone_call_cbs_get_send_master_key_changed (LinphoneCallCbs *cbs);
-
-/**
- * Set the send master key changed callback.
- * @param cbs #LinphoneCallCbs object. @notnil
- * @param[in] cb The send master key changed callback to be used.
- */
-LINPHONE_PUBLIC void linphone_call_cbs_set_send_master_key_changed (LinphoneCallCbs *cbs, LinphoneCallCbsSendMasterKeyChangedCb cb);
-
-/**
- * Get the receive master key changed callback.
- * @param cbs #LinphoneCallCbs object. @notnil
- * @return The current receive master key changed callback.
- */
-LINPHONE_PUBLIC LinphoneCallCbsReceiveMasterKeyChangedCb linphone_call_cbs_get_receive_master_key_changed (LinphoneCallCbs *cbs);
-
-/**
- * Set the receive master key changed callback.
- * @param cbs #LinphoneCallCbs object. @notnil
- * @param[in] cb The receive master key changed callback to be used.
- */
-LINPHONE_PUBLIC void linphone_call_cbs_set_receive_master_key_changed (LinphoneCallCbs *cbs, LinphoneCallCbsReceiveMasterKeyChangedCb cb);
-
-/**
  * Get the info message received callback.
  * @param cbs #LinphoneCallCbs object. @notnil
  * @return The current info message received callback.
@@ -257,25 +229,6 @@ LINPHONE_PUBLIC LinphoneCallCbsCameraNotWorkingCb linphone_call_cbs_get_camera_n
  * @param[in] cb The camera not working callback to be used.
  */
 LINPHONE_PUBLIC void linphone_call_cbs_set_camera_not_working(LinphoneCallCbs *cbs, LinphoneCallCbsCameraNotWorkingCb cb);
-
-/**
- * Get the callback that will be used to notify that there are errors from the video rendering.
- * Check #LinphoneCallCbsVideoDisplayErrorOccurredCb for more details.
- *
- * @param cbs The #LinphoneCallCbs object. @notnil
- * @return The failing rendering callback.
- */
-LINPHONE_PUBLIC LinphoneCallCbsVideoDisplayErrorOccurredCb linphone_call_cbs_get_video_display_error_occurred(const LinphoneCallCbs *cbs);
-
-/**
- * Set the callback that will be used to notify that there are errors from the video rendering.
- * Check #LinphoneCallCbsVideoDisplayErrorOccurredCb for more details.
- *
- * @param cbs The #LinphoneCallCbs object. @notnil
- * @param[in] cb The failing rendering callback to be used.
- */
-LINPHONE_PUBLIC void linphone_call_cbs_set_video_display_error_occurred(LinphoneCallCbs *cbs,
-                                                              LinphoneCallCbsVideoDisplayErrorOccurredCb cb);
 
 /**
  * Get the audio device changed callback.

@@ -30,12 +30,5 @@
 #endif // __GNUC__
 #endif // BCTBX_NO_BREAK
 
-#ifndef BCTBX_UNUSED
-#if (!defined(_WIN32) && (defined(__GNUC__) || defined(__clang__)))
-#define BCTBX_UNUSED(x) x __attribute__((__unused__))
-#else
-#define BCTBX_UNUSED(x) x
-#endif //(!defined(_MSC_VER) && (defined(__GNUC__) || defined(__clang__)))
-#endif // BCTBX_UNUSED
 
 #endif /* BCTBX_DEFS_H_ */

@@ -75,20 +75,6 @@ typedef void (*LinphoneCallCbsGoClearAckSentCb)(LinphoneCall *call);
 typedef void (*LinphoneCallCbsEncryptionChangedCb)(LinphoneCall *call, bool_t on, const char *authentication_token);
 
 /**
- * Call send master key changed callback.
- * @param call #LinphoneCall object whose encryption is changed. @notnil
- * @param master_key The send master key of the SRTP session. @maybenil
- */
-typedef void (*LinphoneCallCbsSendMasterKeyChangedCb)(LinphoneCall *call, const char *send_master_key);
-
-/**
- * Call receive master key changed callback.
- * @param call #LinphoneCall object whose encryption is changed. @notnil
- * @param master_key The receive master key of the SRTP session. @maybenil
- */
-typedef void (*LinphoneCallCbsReceiveMasterKeyChangedCb)(LinphoneCall *call, const char *receive_master_key);
-
-/**
  * Callback for receiving info messages.
  * @param call #LinphoneCall whose info message belongs to. @notnil
  * @param message #LinphoneInfoMessage object. @notnil
@@ -158,16 +144,6 @@ typedef void (*LinphoneCallCbsNextVideoFrameDecodedCb)(LinphoneCall *call);
  * @param camera_name the name of the non-working camera @notnil
  */
 typedef void (*LinphoneCallCbsCameraNotWorkingCb)(LinphoneCall *call, const char *camera_name);
-
-/**
- * Callback to notify that there are errors from the video rendering. The error code depends of the implementation.
- * - If using OpenGL then the errors comes from eglGetError() : https://registry.khronos.org/EGL/sdk/docs/man/html/eglGetError.xhtml
- *   On `EGL_CONTEXT_LOST`, it is recommanded to restart the Window ID with **_create_native_**_video_window_id() and **_set_native_**_video_window_id() functions.
- *
- * @param call LinphoneCall @notnil
- * @param error_code error code from render. It depends of the renderer.
- */
-typedef void (*LinphoneCallCbsVideoDisplayErrorOccurredCb)(LinphoneCall *call, int error_code);
 
 /**
  * Callback to notify that the audio device has been changed.
@@ -672,17 +648,6 @@ typedef void (*LinphoneParticipantDeviceCbsStreamCapabilityChangedCb) (LinphoneP
  * @param[in] direction  participant device's video direction
  */
 typedef void (*LinphoneParticipantDeviceCbsStreamAvailabilityChangedCb) (LinphoneParticipantDevice *participant_device, bool_t available, const LinphoneStreamType stream_type);
-
-/**
- * Callback to notify that there are errors from the video rendering of the participant device.
- * Check #LinphoneCallCbsVideoDisplayErrorOccurredCb for more details.
- *
- * @param[in] participant_device #LinphoneParticipantDevice object @notnil
- * @param[in] error_code the error code coming from the display render.
- */
-typedef void (*LinphoneParticipantDeviceCbsVideoDisplayErrorOccurredCb)(LinphoneParticipantDevice *participant_device,
-                                                                        int error_code);
-
 
 /**
  * Callback for notifying when a registration state has changed for the conference scheduler.

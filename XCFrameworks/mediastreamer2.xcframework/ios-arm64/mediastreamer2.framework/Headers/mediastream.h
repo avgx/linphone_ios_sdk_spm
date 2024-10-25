@@ -22,7 +22,6 @@
 #ifndef MEDIASTREAM_H
 #define MEDIASTREAM_H
 
-#include "ortp/port.h"
 #include <ortp/ortp.h>
 #include <ortp/event.h>
 #include <ortp/nack.h>
@@ -404,7 +403,6 @@ MS2_PUBLIC bool_t ms_media_stream_io_is_consistent(const MSMediaStreamIO *io);
 
 typedef void (*AudioStreamIsSpeakingCallback)(void *user_pointer, uint32_t speaker_ssrc, bool_t is_speaking);
 typedef void (*AudioStreamIsMutedCallback)(void *user_pointer, uint32_t speaker_ssrc, bool_t is_muted);
-typedef void (*AudioStreamActiveSpeakerCallback)(void *user_pointer, uint32_t speaker_ssrc);
 typedef void (*MSAudioRouteChangedCallback)(void* audioStream, bool_t needReloadSoundDevices, char* newInputPort, char* newOutputPort);
 struct _AudioStream
 {
@@ -460,7 +458,6 @@ struct _AudioStream
 	MSAudioRoute audio_route;
 	bool_t play_dtmfs;
 	bool_t use_ec;
-	bool_t force_software_ec;
 	bool_t use_gc;
 	bool_t use_agc;
 
@@ -473,13 +470,11 @@ struct _AudioStream
 	struct _AudioStreamVolumes *participants_volumes;
 	int mixer_to_client_extension_id;
 	int client_to_mixer_extension_id;
+	uint32_t speaking_ssrc;
 	AudioStreamIsSpeakingCallback is_speaking_cb;
-	void *is_speaking_user_pointer;
 	AudioStreamIsMutedCallback is_muted_cb;
-	void *is_muted_user_pointer;
-	AudioStreamActiveSpeakerCallback active_speaker_cb;
-	void *active_speaker_user_pointer;
-	uint32_t active_speaker_ssrc;
+	void *user_pointer;
+	bool_t is_speaking;
 	MSAudioRouteChangedCallback audio_route_changed_cb;
 	void * audio_route_changed_cb_user_data;
 };
@@ -661,16 +656,11 @@ MS2_PUBLIC void audio_stream_enable_automatic_gain_control(AudioStream *stream, 
  *  */
 MS2_PUBLIC void audio_stream_set_echo_canceller_params(AudioStream *st, int tail_len_ms, int delay_ms, int framesize);
 
+
 /**
  * to be done before start
  *  */
 MS2_PUBLIC void audio_stream_enable_echo_canceller(AudioStream *st, bool_t enabled);
-
-/**
- * Forces the use of a software echo canceller if available instead of hardwared/built-in one.
-*/
-MS2_PUBLIC void audio_stream_force_software_echo_canceller(AudioStream *st, bool_t force);
-
 /**
  * enable adaptive rate control
  * */
@@ -815,11 +805,6 @@ MS2_PUBLIC void audio_stream_stop (AudioStream * stream);
  *  */
 MS2_PUBLIC int audio_stream_send_dtmf (AudioStream * stream, char dtmf);
 
-/**
- *  Are telephone events supported? Used to determine if DTMFs can be sent out-of-band
- */
-MS2_PUBLIC bool_t audio_stream_supports_telephone_events(AudioStream *stream);
-
 MS2_PUBLIC MSFilter *audio_stream_get_local_player(AudioStream *stream);
 
 MS2_PUBLIC int audio_stream_set_mixed_record_file(AudioStream *st, const char*filename);
@@ -902,8 +887,6 @@ MS2_PUBLIC void audio_stream_set_client_to_mixer_extension_id(AudioStream *strea
 
 MS2_PUBLIC void audio_stream_set_is_speaking_callback(AudioStream *s, AudioStreamIsSpeakingCallback cb, void *user_pointer);
 MS2_PUBLIC void audio_stream_set_is_muted_callback(AudioStream *s, AudioStreamIsMutedCallback cb, void *user_pointer);
-MS2_PUBLIC void
-audio_stream_set_active_speaker_callback(AudioStream *s, AudioStreamActiveSpeakerCallback cb, void *user_pointer);
 
 /**
  * Retrieve the volume of the given participant.
@@ -963,10 +946,8 @@ MS2_PUBLIC uint32_t audio_stream_volumes_get_best(AudioStreamVolumes *volumes);
  * @{
 **/
 
-
 typedef void (*VideoStreamRenderCallback)(void *user_pointer, const MSPicture *local_view, const MSPicture *remote_view);
 typedef void (*VideoStreamEventCallback)(void *user_pointer, const MSFilter *f, const unsigned int event_id, const void *args);
-typedef void (*VideoStreamDisplayCallback)(void *user_pointer, const unsigned int event_id, const void *args);/* if coming from OpenGL and event_id==MS_VIDEO_DISPLAY_ERROR_OCCURRED, args is an int from eglGetError() : https://registry.khronos.org/EGL/sdk/docs/man/html/eglGetError.xhtml */
 typedef void (*VideoStreamCameraNotWorkingCallback)(void *user_pointer, const MSWebCam *old_webcam);
 typedef void (*VideoStreamEncoderControlCb)(struct _VideoStream *, unsigned int method_id, void *arg, void *user_data);
 typedef void (*VideoStreamCsrcChangedCb)(void *user_pointer, uint32_t new_csrc);
@@ -1017,8 +998,6 @@ struct _VideoStream
 	void *render_pointer;
 	VideoStreamEventCallback eventcb;
 	void *event_pointer;
-	VideoStreamDisplayCallback displaycb;
-	void *display_pointer;
 	char *display_name;
 	void *window_id;
 	void *preview_window_id;
@@ -1087,8 +1066,6 @@ static MS2_INLINE void video_stream_enable_adaptive_jittcomp(VideoStream *stream
 }
 MS2_PUBLIC void video_stream_set_render_callback(VideoStream *s, VideoStreamRenderCallback cb, void *user_pointer);
 MS2_PUBLIC void video_stream_set_event_callback(VideoStream *s, VideoStreamEventCallback cb, void *user_pointer);
-MS2_PUBLIC void video_stream_set_display_callback(VideoStream *s, VideoStreamDisplayCallback cb, void *user_pointer);
-
 MS2_PUBLIC void video_stream_set_camera_not_working_callback(VideoStream *s, VideoStreamCameraNotWorkingCallback cb, void *user_pointer);
 MS2_PUBLIC void video_stream_set_display_filter_name(VideoStream *s, const char *fname);
 MS2_PUBLIC void video_stream_set_label(VideoStream *s, const char *label);
@@ -1452,10 +1429,8 @@ MS2_PUBLIC void video_stream_set_csrc_changed_callback(VideoStream *stream, Vide
 
 typedef VideoStream VideoPreview;
 
-
 MS2_PUBLIC VideoPreview * video_preview_new(MSFactory *factory);
 #define video_preview_set_event_callback(p,c,u) video_stream_set_event_callback(p,c,u)
-#define video_preview_set_display_callback(p, c, u) video_stream_set_display_callback(p, c, u)
 #define video_preview_set_size(p,s) video_stream_set_sent_video_size(p,s)
 #define video_preview_set_display_filter_name(p,dt) video_stream_set_display_filter_name(p,dt)
 #define video_preview_create_native_window_id(p) video_stream_create_native_preview_window_id(p)

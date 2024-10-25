@@ -115,9 +115,8 @@ namespace lime {
 	 */
 	using limeX3DHServerPostData = std::function<void(const std::string &url, const std::string &from, const std::vector<uint8_t> &message, const limeX3DHServerResponseProcess &reponseProcess)>;
 
-	/* Forward declare the class managing one lime user and class managing database */
+	/* Forward declare the class managing one lime user*/
 	class LimeGeneric;
-	class Db;
 
 	/** @brief Manage several Lime objects(one is needed for each local user).
 	 *
@@ -129,7 +128,8 @@ namespace lime {
 		private :
 			std::unordered_map<std::string, std::shared_ptr<LimeGeneric>> m_users_cache; // cache of already opened Lime Session, identified by user Id (GRUU)
 			std::mutex m_users_mutex; // m_users_cache mutex
-			std::shared_ptr<lime::Db> m_localStorage; // DB access information forwarded to SOCI to correctly access database
+			std::string m_db_access; // DB access information forwarded to SOCI to correctly access database
+			std::shared_ptr<std::recursive_mutex> m_db_mutex; // database access mutex
 			limeX3DHServerPostData m_X3DH_post_data; // send data to the X3DH key server
 			void load_user(std::shared_ptr<LimeGeneric> &user, const std::string &localDeviceId, const bool allStatus=false); // helper function, get from m_users_cache of local Storage the requested Lime object
 
@@ -243,15 +243,14 @@ namespace lime {
 			lime::PeerDeviceStatus decrypt(const std::string &localDeviceId, const std::string &recipientUserId, const std::string &senderDeviceId, const std::vector<uint8_t> &DRmessage, std::vector<uint8_t> &plainMessage);
 
 			/**
-			 * @brief Update: shall be called regularly, once a day at least, performs checks, updates and cleaning operations
-			 * The update is performed each OPk_updatePeriod (defined in lime::settings to be one day). If the function is called before
-			 * this interval is over, it just does nothing.
+			 * @brief Update: shall be called once a day at least, performs checks, updates and cleaning operations
 			 *
-			 *  - check if we shall update a new SPk to X3DH server(SPk lifetime is set in lime::settings)
+			 *  - check if we shall update a new SPk to X3DH server(SPk lifetime is set in settings)
 			 *  - check if we need to upload OPks to X3DH server
 			 *  - remove old SPks, clean double ratchet sessions (remove staled, clean their stored keys for skipped messages)
 			 *
-			 * @param[in]	localDeviceId		Identify the local user acount to use, it must be unique and is also used as Id on the X3DH key server, it shall be the GRUU
+			 *  Is performed for all users founds in local storage
+			 *
 			 * @param[in]	callback		This operation may contact the X3DH server and is thus asynchronous, when server responds,
 			 * 					this callback will be called giving the exit status and an error message in case of failure.
 			 * @param[in]	OPkServerLowLimit	If server holds less OPk than this limit, generate and upload a batch of OPks
@@ -261,11 +260,11 @@ namespace lime {
 			 * The last two parameters are optional, if not used, set to defaults defined in lime::settings
 			 * (not done with param default value as the lime::settings shall not be available in public include)
 			 */
-			void update(const std::string &localDeviceId, const limeCallback &callback, uint16_t OPkServerLowLimit, uint16_t OPkBatchSize);
+			void update(const limeCallback &callback, uint16_t OPkServerLowLimit, uint16_t OPkBatchSize);
 			/**
 			 * @overload void update(const limeCallback &callback)
 			 */
-			void update(const std::string &localDeviceId, const limeCallback &callback);
+			void update(const limeCallback &callback);
 
 			/**
 			 * @brief retrieve self Identity Key, an EdDSA formatted public key

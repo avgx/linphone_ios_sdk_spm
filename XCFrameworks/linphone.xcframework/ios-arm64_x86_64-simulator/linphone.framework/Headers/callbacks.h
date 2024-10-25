@@ -82,22 +82,6 @@ typedef LinphoneCoreCbsCallStateChangedCb LinphoneCoreCallStateChangedCb;
 typedef void (*LinphoneCoreCbsCallGoClearAckSentCb)(LinphoneCore *core, LinphoneCall *call);
 
 /**
- * Call send master key changed callback.
- * @param core the #LinphoneCore @notnil
- * @param call the #LinphoneCall on which the GoClear ACK was sent. @notnil
- * @param master_key new master key. @maybenil
- */
-typedef void (*LinphoneCoreCbsCallSendMasterKeyChangedCb)(LinphoneCore *core, LinphoneCall *call, const char * master_key);
-
-/**
- * Call receive master key changed callback.
- * @param core the #LinphoneCore @notnil
- * @param call the #LinphoneCall on which the GoClear ACK was sent. @notnil
- * @param master_key new master key. @maybenil
- */
-typedef void (*LinphoneCoreCbsCallReceiveMasterKeyChangedCb)(LinphoneCore *core, LinphoneCall *call, const char * master_key);
-
-/**
  * Call encryption changed callback.
  * @param core the #LinphoneCore @notnil
  * @param call the #LinphoneCall on which encryption is changed. @notnil
@@ -243,18 +227,6 @@ typedef void (*LinphoneCoreCbsMessageSentCb)(LinphoneCore *core, LinphoneChatRoo
 typedef LinphoneCoreCbsMessageReceivedCb LinphoneCoreMessageReceivedCb;
 
 /**
- * Chat room session state changed callback
- * @param core #LinphoneCore object @notnil
- * @param chat_room #LinphoneChatRoom that has been marked as read. @notnil
- * @param state the new #LinphoneCallState of the call
- * @param message a non NULL informational message about the state. @notnil
- */
-typedef void (*LinphoneCoreCbsChatRoomSessionStateChangedCb)(LinphoneCore *core,
-                                                             LinphoneChatRoom *chat_room,
-                                                             LinphoneCallState state,
-                                                             const char *message);
-
-/**
  * Chat room marked as read callback
  * @param core #LinphoneCore object @notnil
  * @param chat_room #LinphoneChatRoom that has been marked as read. @notnil
@@ -325,7 +297,7 @@ typedef void (*LinphoneCoreCbsDtmfReceivedCb)(LinphoneCore* core, LinphoneCall *
  */
 typedef LinphoneCoreCbsDtmfReceivedCb LinphoneCoreDtmfReceivedCb;
 
-/**
+/** 
  * Callback prototype for when a refer is received
  * @param core the #LinphoneCore @notnil
  * @param refer_to the address of the refer @notnil
@@ -337,11 +309,11 @@ typedef void (*LinphoneCoreCbsReferReceivedCb)(LinphoneCore *core, const char *r
  */
 typedef LinphoneCoreCbsReferReceivedCb LinphoneCoreReferReceivedCb;
 
-/**
+/** 
  * Callback prototype when using the buddy plugin
  * @param core the #LinphoneCore @notnil
  * @param linphone_friend the #LinphoneFriend that has been updated @notnil
- */
+ */ 
 typedef void (*LinphoneCoreCbsBuddyInfoUpdatedCb)(LinphoneCore *core, LinphoneFriend *linphone_friend);
 
 /**
@@ -440,7 +412,7 @@ typedef void (*LinphoneCoreCbsLogCollectionUploadProgressIndicationCb)(LinphoneC
 typedef LinphoneCoreCbsLogCollectionUploadProgressIndicationCb LinphoneCoreLogCollectionUploadProgressIndicationCb;
 
 /**
- * Callback prototype for reporting when a friend list has been added to the core friend lists.
+ * Callback prototype for reporting when a friend list has been added to the core friends list.
  * @param core #LinphoneCore object @notnil
  * @param friend_list #LinphoneFriendList object @notnil
  */
@@ -452,7 +424,7 @@ typedef void (*LinphoneCoreCbsFriendListCreatedCb) (LinphoneCore *core, Linphone
 typedef LinphoneCoreCbsFriendListCreatedCb LinphoneCoreFriendListCreatedCb;
 
 /**
- * Callback prototype for reporting when a friend list has been removed from the core friend lists.
+ * Callback prototype for reporting when a friend list has been removed from the core friends list.
  * @param core #LinphoneCore object @notnil
  * @param friend_list #LinphoneFriendList object @notnil
  */
@@ -590,7 +562,7 @@ typedef LinphoneCoreCbsNotifyReceivedCb LinphoneCoreNotifyReceivedCb;
  * @param core #LinphoneCore object @notnil
  * @param linphone_event the #LinphoneEvent received @notnil
  * @param subscribe_event The event as string @notnil
- * @param body the #LinphoneContent of the event @maybenil
+ * @param body the #LinphoneContent of the event @notnil
  */
 typedef void (*LinphoneCoreCbsSubscribeReceivedCb)(LinphoneCore *core, LinphoneEvent *linphone_event, const char *subscribe_event, const LinphoneContent *body);
 
@@ -635,19 +607,11 @@ typedef void (*LinphoneCoreCbsConferenceInfoReceivedCb)(LinphoneCore *core, cons
 /**
  * Callback prototype for notifying the application a push notification was received.
  * On iOS it only works with pushkit (VoIP) pushes.
+ * On Android it works only for pushes received after Core has been created.
  * @param core #LinphoneCore object @notnil
  * @param payload the body of the push notification, if any @maybenil
  */
 typedef void (*LinphoneCoreCbsPushNotificationReceivedCb)(LinphoneCore *core, const char *payload);
-
-/**
- * Callback to notify that there are errors from the video rendering.
- * Check #LinphoneCallCbsVideoDisplayErrorOccurredCb for more details.
- *
- * @param core #LinphoneCore object @notnil
- * @param error_code The error code. It depends of the display filter (available for OpenGL)
- **/
-typedef void (*LinphoneCoreCbsPreviewDisplayErrorOccurredCb)(LinphoneCore *core, int error_code);
 
 /**
  * @}
@@ -699,8 +663,8 @@ typedef void (*LinphoneFriendListCbsContactUpdatedCb)(LinphoneFriendList *friend
  * Callback used to notify the status of the synchronization has changed
  * @param friend_list The #LinphoneFriendList object for which the status has changed @notnil
  * @param status The new #LinphoneFriendListSyncStatus
- * @param message An additional information on the status update @maybenil
- **/
+ * @param message An additional information on the status update @notnil
+**/
 typedef void (*LinphoneFriendListCbsSyncStateChangedCb)(LinphoneFriendList *friend_list, LinphoneFriendListSyncStatus status, const char *message);
 
 /**
@@ -709,12 +673,6 @@ typedef void (*LinphoneFriendListCbsSyncStateChangedCb)(LinphoneFriendList *frie
  * @param friends A \bctbx_list{LinphoneFriend} of the relevant friends @notnil
 **/
 typedef void (*LinphoneFriendListCbsPresenceReceivedCb)(LinphoneFriendList *friend_list, const bctbx_list_t *friends);
-
-/**
- * Callback used to notify a friend that it has received presence information.
- * @param linphone_friend The #LinphoneFriend object for which the status has changed @notnil
-**/
-typedef void (*LinphoneFriendCbsPresenceReceivedCb)(LinphoneFriend *linphone_friend);
 
 /**
  * @}

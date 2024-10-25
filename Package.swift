@@ -34,6 +34,7 @@ let package = Package(
                 "mssilk",
                 "mswebrtc",
                 "ortp",
+                "msx264",
                 "ZXing"
             ]
         ),
@@ -92,6 +93,10 @@ let package = Package(
         .binaryTarget(
             name: "ortp",
             path: "XCFrameworks/ortp.xcframework"
+        ),
+        .binaryTarget(
+            name: "msx264",
+            path: "XCFrameworks/msx264.xcframework"
         ),
         .binaryTarget(
             name: "ZXing",

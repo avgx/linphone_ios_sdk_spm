@@ -107,6 +107,12 @@ namespace Utils {
 	LINPHONE_PUBLIC std::string unicodeToUtf8 (uint32_t ic);
 	LINPHONE_PUBLIC std::string unicodeToUtf8 (const std::vector<uint32_t>& chars);
 
+	LINPHONE_PUBLIC inline std::string cStringToCppString (const char *str) {
+		return str ? str : "";
+	}
+
+
+
 	template<typename S, typename T>
 	inline std::string join (const std::vector<T>& elems, const S& delim) {
 		std::stringstream ss;
@@ -225,8 +231,6 @@ namespace Utils {
 	std::string getResourceLists (const std::list<IdentityAddress> &addresses);
 	std::list<IdentityAddress> parseResourceLists (const Content &content);
 	std::shared_ptr<ConferenceInfo> createConferenceInfoFromOp (SalCallOp *op, bool remote);
-
-	std::string computeHa1ForAlgorithm(const std::string& userId, const std::string& password, const std::string& realm, const std::string& algorithm);
 }
 
 LINPHONE_PUBLIC std::ostream &operator<<(std::ostream & ostr, const Utils::Version &version);

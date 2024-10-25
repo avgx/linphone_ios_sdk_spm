@@ -187,41 +187,38 @@ typedef enum _LinphoneAccountCreatorTransportStatus {
 **/
 typedef enum _LinphoneAccountCreatorStatus {
 	/** Request status **/
-	LinphoneAccountCreatorStatusRequestOk = 0,		  /**< Request passed */
-	LinphoneAccountCreatorStatusRequestFailed = 1,	  /**< Request failed */
+	LinphoneAccountCreatorStatusRequestOk = 0, /**< Request passed */
+	LinphoneAccountCreatorStatusRequestFailed = 1, /**< Request failed */
 	LinphoneAccountCreatorStatusMissingArguments = 2, /**< Request failed due to missing argument(s) */
 	LinphoneAccountCreatorStatusMissingCallbacks = 3, /**< Request failed due to missing callback(s) */
 
 	/** Account status **/
 	/* Creation */
-	LinphoneAccountCreatorStatusAccountCreated = 4,	   /**< Account created */
+	LinphoneAccountCreatorStatusAccountCreated = 4, /**< Account created */
 	LinphoneAccountCreatorStatusAccountNotCreated = 5, /**< Account not created */
 	/* Existence */
-	LinphoneAccountCreatorStatusAccountExist = 6,		   /**< Account exist */
+	LinphoneAccountCreatorStatusAccountExist = 6, /**< Account exist */
 	LinphoneAccountCreatorStatusAccountExistWithAlias = 7, /**< Account exist with alias */
-	LinphoneAccountCreatorStatusAccountNotExist = 8,	   /**< Account not exist */
-	LinphoneAccountCreatorStatusAliasIsAccount = 9,		   /**< Account was created with Alias */
-	LinphoneAccountCreatorStatusAliasExist = 10,		   /**< Alias exist */
-	LinphoneAccountCreatorStatusAliasNotExist = 11,		   /**< Alias not exist */
+	LinphoneAccountCreatorStatusAccountNotExist = 8, /**< Account not exist */
+	LinphoneAccountCreatorStatusAliasIsAccount = 9, /**< Account was created with Alias */
+	LinphoneAccountCreatorStatusAliasExist = 10, /**< Alias exist */
+	LinphoneAccountCreatorStatusAliasNotExist = 11, /**< Alias not exist */
 	/* Activation */
-	LinphoneAccountCreatorStatusAccountActivated = 12,		  /**< Account activated */
+	LinphoneAccountCreatorStatusAccountActivated = 12, /**< Account activated */
 	LinphoneAccountCreatorStatusAccountAlreadyActivated = 13, /**< Account already activated */
-	LinphoneAccountCreatorStatusAccountNotActivated = 14,	  /**< Account not activated */
+	LinphoneAccountCreatorStatusAccountNotActivated = 14, /**< Account not activated */
 	/* Linking */
-	LinphoneAccountCreatorStatusAccountLinked = 15,	   /**< Account linked */
+	LinphoneAccountCreatorStatusAccountLinked = 15, /**< Account linked */
 	LinphoneAccountCreatorStatusAccountNotLinked = 16, /**< Account not linked */
 
 	/** Server **/
-	LinphoneAccountCreatorStatusServerError = 17,		  /**< Error server */
+	LinphoneAccountCreatorStatusServerError = 17, /**< Error server */
 
-	LinphoneAccountCreatorStatusPhoneNumberInvalid = 18,  /**< Error cannot send SMS */
+	LinphoneAccountCreatorStatusPhoneNumberInvalid = 18, /**< Error cannot send SMS */
 	LinphoneAccountCreatorStatusWrongActivationCode = 19, /**< Error key doesn't match */
 	LinphoneAccountCreatorStatusPhoneNumberOverused = 20, /**< Error too many SMS sent */
-	LinphoneAccountCreatorStatusAlgoNotSupported = 21,	  /**< Error algo isn't MD5 or SHA-256 */
-	LinphoneAccountCreatorStatusUnexpectedError = 22,	  /**< Generic error */
-	LinphoneAccountCreatorStatusNotImplementedError = 23, /**< This API isn't implemented in the current backend */
-	LinphoneAccountCreatorStatusRequestNotAuthorized =
-		24, /**< Request has been denied, probably due to invalid auth token */
+	LinphoneAccountCreatorStatusAlgoNotSupported = 21, /**< Error algo isn't MD5 or SHA-256 */
+	LinphoneAccountCreatorStatusUnexpectedError = 22, /**< Generic error */
 } LinphoneAccountCreatorStatus;
 
 // -----------------------------------------------------------------------------
@@ -321,12 +318,6 @@ typedef enum _LinphoneVideoSourceType {
 typedef struct _LinphoneFriend LinphoneFriend;
 
 /**
- * @brief An object to handle the callbacks for #LinphoneFriend.
- * @ingroup buddy_list
- **/
-typedef struct _LinphoneFriendCbs LinphoneFriendCbs;
-
-/**
 * @brief Enum describing the capabilities of a #LinphoneFriend, populated through presence subscribe/notify process.
 * @ingroup buddy_list
 **/
@@ -350,7 +341,6 @@ typedef struct _LinphoneFriendList LinphoneFriendList;
  * @ingroup buddy_list
  */
 typedef enum _LinphoneFriendListType {
-	LinphoneFriendListTypeDefault = -1,
 	LinphoneFriendListTypeCardDAV = 0,
 	LinphoneFriendListTypeVCard4 = 1
 } LinphoneFriendListType;
@@ -452,8 +442,7 @@ typedef enum _LinphoneRegistrationState {
 	LinphoneRegistrationProgress = 1, /**< Registration is in progress */
 	LinphoneRegistrationOk = 2,	/**< Registration is successful */
 	LinphoneRegistrationCleared = 3, /**< Unregistration succeeded */
-	LinphoneRegistrationFailed = 4,	/**< Registration failed */
-	LinphoneRegistrationRefreshing = 5	/**< Registration refreshing */
+	LinphoneRegistrationFailed = 4	/**< Registration failed */
 } LinphoneRegistrationState;
 
 /**
@@ -466,7 +455,7 @@ typedef enum _LinphoneRegistrationState {
  *
  * Once the #LinphoneCore is in state #LinphoneGlobalReady, use linphone_core_start().
  * It will then go to state #LinphoneGlobalOn and from that you can start using it for calls and chat messages.
- * It is recommended to add a #LinphoneCoreCbs listener using linphone_core_add_callbacks() to it to monitor different events.
+ * It is recommended to add a #LinphoneCoreCbs listener using linphone_core_add_listener() to it to monitor different events.
  *
  * To be able to receive events from the network, you must schedule a call linphone_core_iterate() often, like every 20ms.
  * On Android & iOS linphone_core_is_auto_iterate_enabled() is enabled by default so you don't have to worry about that unless you disable it
@@ -490,9 +479,9 @@ typedef struct _LinphoneFactory LinphoneFactory;
 /**
  * @brief That class holds all the callbacks which are called by #LinphoneCore.
  *
- * Once created, add your #LinphoneCoreCbs using linphone_core_add_callbacks().
+ * Once created, add your #LinphoneCoreCbs using linphone_core_add_listener().
  * Keep a reference on it as long as you need it.
- * You can use linphone_core_remove_callbacks() to remove it but that isn't mandatory.
+ * You can use linphone_core_remove_listener() to remove it but that isn't mandatory.
  *
  * The same applies to all listeners in our API.
  * @ingroup initializing
@@ -743,11 +732,11 @@ typedef enum _LinphoneCoreLogCollectionUploadState {
  * @ingroup call_control
  */
 typedef enum _LinphoneMediaDirection {
-	LinphoneMediaDirectionInvalid = -1, /**< Default value, shouldn't be used */
-	LinphoneMediaDirectionInactive = 0, /**< No active media not supported yet*/
-	LinphoneMediaDirectionSendOnly = 1, /**< Media is only being sent, it won't be received*/
-	LinphoneMediaDirectionRecvOnly = 2, /**< Media will only be received, nothing will be sent*/
-	LinphoneMediaDirectionSendRecv = 3, /**< Media will be sent and received*/
+	LinphoneMediaDirectionInvalid = -1,
+	LinphoneMediaDirectionInactive = 0, /** No active media not supported yet*/
+	LinphoneMediaDirectionSendOnly = 1, /** Send only mode*/
+	LinphoneMediaDirectionRecvOnly = 2, /** recv only mode*/
+	LinphoneMediaDirectionSendRecv = 3, /** send receive*/
 } LinphoneMediaDirection;
 
 /**
@@ -836,20 +825,19 @@ typedef struct _LinphoneNatPolicy LinphoneNatPolicy;
  * @deprecated 03/02/2017 Use #LinphonePresenceModel and #LinphonePresenceActivity instead
  * @donotwrap
  */
-typedef enum _LinphoneOnlineStatus {
-	LinphoneStatusOffline = 0,		/**< Offline */
-	LinphoneStatusOnline = 1,		/**< Online */
-	LinphoneStatusBusy = 2,			/**< Busy */
-	LinphoneStatusBeRightBack = 3,	/**< Be right back */
-	LinphoneStatusAway = 4,			/**< Away */
-	LinphoneStatusOnThePhone = 5,	/**< On the phone */
-	LinphoneStatusOutToLunch = 6,	/**< Out to lunch */
+typedef enum _LinphoneOnlineStatus{
+	LinphoneStatusOffline = 0, /**< Offline */
+	LinphoneStatusOnline = 1, /**< Online */
+	LinphoneStatusBusy = 2, /**< Busy */
+	LinphoneStatusBeRightBack = 3, /**< Be right back */
+	LinphoneStatusAway = 4, /**< Away */
+	LinphoneStatusOnThePhone = 5, /** On the phone */
+	LinphoneStatusOutToLunch = 6, /**< Out to lunch */
 	LinphoneStatusDoNotDisturb = 7, /**< Do not disturb */
-	LinphoneStatusMoved = 8, /**< Moved in this sate, call can be redirected if an alternate contact address has been
-								set using function linphone_core_set_presence_info() */
+	LinphoneStatusMoved = 8, /**< Moved in this sate, call can be redirected if an alternate contact address has been set using function linphone_core_set_presence_info() */
 	LinphoneStatusAltService = 9, /**< Using another messaging service */
-	LinphoneStatusPending = 10,	  /**< Pending */
-	LinphoneStatusVacation = 11,  /**< Vacation */
+	LinphoneStatusPending = 10, /**< Pending */
+	LinphoneStatusVacation = 11, /**< Vacation */
 
 	LinphoneStatusEnd = 12
 } LinphoneOnlineStatus;
@@ -1204,13 +1192,12 @@ typedef enum _LinphoneSubscriptionState{
  * @ingroup misc
 **/
 typedef enum _LinphoneToneID {
-	LinphoneToneUndefined = 0,	/**< Not a tone */
-	LinphoneToneBusy = 1,		/**< Busy tone */
-	LinphoneToneCallWaiting = 2,	/**< Call waiting tone */
-	LinphoneToneCallOnHold = 3,	/**< Call on hold tone */
-	LinphoneToneCallLost = 4,	/**< Tone played when call is abruptly disconnected (media lost)*/
-	LinphoneToneCallEnd = 5,	/**< When the call end for any reason but lost */
-	LinphoneToneCallNotAnswered = 6	/**< When the call is not answered */
+	LinphoneToneUndefined = 0, /**< Not a tone */
+	LinphoneToneBusy = 1, /**< Busy tone */
+	LinphoneToneCallWaiting = 2, /** Call waiting tone */
+	LinphoneToneCallOnHold = 3, /** Call on hold tone */
+	LinphoneToneCallLost = 4, /** Tone played when call is abruptly disconnected (media lost)*/
+	LinphoneToneCallEnd = 5 /** When the call end for any reason but lost */
 } LinphoneToneID;
 
 /**

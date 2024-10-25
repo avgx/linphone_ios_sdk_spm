@@ -233,17 +233,6 @@ LINPHONE_PUBLIC LinphoneAuthInfo *linphone_factory_create_auth_info(const Linpho
 LINPHONE_PUBLIC LinphoneAuthInfo *linphone_factory_create_auth_info_2(const LinphoneFactory *factory, const char *username, const char *userid, const char *passwd, const char *ha1, const char *realm, const char *domain, const char *algorithm);
 
 /**
- * Computes the hashed version of the password given the user ID and the realm, using given algorithm.
- * @param factory The #LinphoneFactory singleton. @notnil
- * @param userid the username or user ID to use. @notnil
- * @param password the password to hash. @notnil
- * @param realm the real to use. @notnil
- * @param algorithm the algorithm to use (MD5 or SHA-256). @notnil
- * @return the generated hash if it succeeded, NULL otherwise. @maybenil @tobefreed
-*/
-LINPHONE_PUBLIC char * linphone_factory_compute_ha1_for_algorithm(const LinphoneFactory *factory, const char *userid, const char *password, const char *realm, const char *algorithm);
-
-/**
  * Create a #LinphoneCallCbs object that holds callbacks for events happening on a call.
  * @param factory #LinphoneFactory singletion object @notnil
  * @return A new #LinphoneCallCbs object @notnil
@@ -553,14 +542,6 @@ LINPHONE_PUBLIC const bctbx_list_t * linphone_factory_get_dial_plans(const Linph
 LINPHONE_PUBLIC LinphoneContent *linphone_factory_create_content(LinphoneFactory *factory);
 
 /**
- * Creates a file object of #LinphoneContent from a file path.
- * @param factory the #LinphoneFactory @notnil
- * @param file_path the path of the file @notnil
- * @return a #LinphoneContent which can be used as a file @notnil
- */
-LINPHONE_PUBLIC LinphoneContent *linphone_factory_create_content_from_file(LinphoneFactory *factory, const char * file_path);
-
-/**
  * Creates an object #LinphoneBuffer
  * @param factory the #LinphoneFactory @notnil
  * @return a #LinphoneBuffer @notnil
@@ -678,13 +659,6 @@ LINPHONE_PUBLIC LinphoneEventCbs *linphone_factory_create_event_cbs(LinphoneFact
  * @return a #LinphoneFriendListCbs @notnil
  */
 LINPHONE_PUBLIC LinphoneFriendListCbs *linphone_factory_create_friend_list_cbs(LinphoneFactory *factory);
-
-/**
- * Creates an object #LinphoneFriendCbs
- * @param factory the #LinphoneFactory @notnil
- * @return a #LinphoneFriendCbs @notnil
- */
-LINPHONE_PUBLIC LinphoneFriendCbs *linphone_factory_create_friend_cbs(LinphoneFactory *factory);
 
 /**
  * Creates an object #LinphoneAccountCreatorCbs

@@ -69,13 +69,6 @@ MS2_PUBLIC void ms_media_player_free(MSMediaPlayer *obj);
 MS2_PUBLIC void * ms_media_player_get_window_id(const MSMediaPlayer *obj);
 
 /**
- * Create a window ID
- * @param obj The player
- * @return window_id the window ID
- */
-MS2_PUBLIC void * ms_media_player_create_window_id(MSMediaPlayer *obj);
-
-/**
  * Set the window ID
  * @param obj The player
  * @param window_id the window ID
@@ -191,13 +184,6 @@ MS2_PUBLIC MSFileFormat ms_media_player_get_file_format(const MSMediaPlayer *obj
  * @return TRUE if file has video and it can be displayed, FALSE otherwise
  */
 MS2_PUBLIC bool_t ms_media_player_get_is_video_available(MSMediaPlayer *obj);
-
-/**
- * Returns whether the file has a video track.
- * @param obj The player
- * @return TRUE if file has a video track, FALSE otherwise
- */
-MS2_PUBLIC bool_t ms_media_player_has_video_track(MSMediaPlayer *obj);
 
 /**
  * Set the volume gain of the player.

@@ -169,14 +169,14 @@ LINPHONE_PUBLIC LinphoneCore* linphone_account_get_core(LinphoneAccount *account
  * @param account The #LinphoneAccount object. @notnil
  * @return The #LinphoneErrorInfo explaining why registration failed for this account. @notnil
 **/
-LINPHONE_PUBLIC const LinphoneErrorInfo* linphone_account_get_error_info(LinphoneAccount *account);
+LINPHONE_PUBLIC LinphoneErrorInfo* linphone_account_get_error_info(LinphoneAccount *account);
 
 /**
  * Return the contact address of the account.
  * @param account The #LinphoneAccount object. @notnil
  * @return a #LinphoneAddress correspong to the contact address of the account. @maybenil
 **/
-LINPHONE_PUBLIC const LinphoneAddress* linphone_account_get_contact_address(LinphoneAccount *account);
+LINPHONE_PUBLIC LinphoneAddress* linphone_account_get_contact_address(LinphoneAccount *account);
 
 
 /**
@@ -262,7 +262,7 @@ LINPHONE_PUBLIC int linphone_account_get_unread_chat_message_count(LinphoneAccou
  * @param username The string to parse. @notnil
  * @return TRUE if input is a phone number, FALSE otherwise.
 **/
-LINPHONE_PUBLIC bool_t linphone_account_is_phone_number(const LinphoneAccount *account, const char *username);
+LINPHONE_PUBLIC bool_t linphone_account_is_phone_number(LinphoneAccount *account, const char *username);
 
 /**
  * Normalize a human readable phone number into a basic string. 888-444-222 becomes 888444222
@@ -270,9 +270,9 @@ LINPHONE_PUBLIC bool_t linphone_account_is_phone_number(const LinphoneAccount *a
  * This function will always generate a normalized username if input is a phone number.
  * @param account The #LinphoneAccount object containing country code and/or escape symbol. If NULL passed, will use default configuration. @maybenil
  * @param username The string to parse. @notnil
- * @return NULL if input is an invalid phone number, normalized phone number from username input otherwise. @maybenil @tobefreed
+ * @return NULL if input is an invalid phone number, normalized phone number from username input otherwise. @maybenil
 */
-LINPHONE_PUBLIC char* linphone_account_normalize_phone_number(const LinphoneAccount *account, const char *username);
+LINPHONE_PUBLIC char* linphone_account_normalize_phone_number(LinphoneAccount *account, const char *username);
 
 /**
  * Normalize a human readable sip uri into a fully qualified LinphoneAddress.
@@ -285,7 +285,7 @@ LINPHONE_PUBLIC char* linphone_account_normalize_phone_number(const LinphoneAcco
  * The result is a syntactically correct SIP address.
  * @param account The #LinphoneAccount object containing country code, escape symbol and/or domain name. Can be NULL if domain is already provided. @maybenil
  * @param username The string to parse. @notnil
- * @return NULL if invalid input, normalized sip address otherwise. @maybenil @tobefreed
+ * @return NULL if invalid input, normalized sip address otherwise. @maybenil
 */
 LINPHONE_PUBLIC LinphoneAddress* linphone_account_normalize_sip_uri(LinphoneAccount *account, const char* username);
 
