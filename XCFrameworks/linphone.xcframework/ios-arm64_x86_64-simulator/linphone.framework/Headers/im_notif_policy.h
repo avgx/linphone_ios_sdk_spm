@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2010-2022 Belledonne Communications SARL.
  *
- * This file is part of Liblinphone 
+ * This file is part of Liblinphone
  * (see https://gitlab.linphone.org/BC/public/liblinphone).
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,14 +21,11 @@
 #ifndef LINPHONE_IM_NOTIF_POLICY_H_
 #define LINPHONE_IM_NOTIF_POLICY_H_
 
-
 #include "linphone/types.h"
-
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 /**
  * @addtogroup chatroom
@@ -39,31 +36,32 @@ extern "C" {
  * Acquire a reference to the #LinphoneImNotifPolicy object.
  * @param policy #LinphoneImNotifPolicy object. @notnil
  * @return The same #LinphoneImNotifPolicy object. @notnil
-**/
-LINPHONE_PUBLIC LinphoneImNotifPolicy * linphone_im_notif_policy_ref(LinphoneImNotifPolicy *policy);
+ **/
+LINPHONE_PUBLIC LinphoneImNotifPolicy *linphone_im_notif_policy_ref(LinphoneImNotifPolicy *policy);
 
 /**
  * Release reference to the #LinphoneImNotifPolicy object.
  * @param policy #LinphoneImNotifPolicy object. @notnil
-**/
+ **/
 LINPHONE_PUBLIC void linphone_im_notif_policy_unref(LinphoneImNotifPolicy *policy);
 
 /**
  * Retrieve the user pointer associated with the #LinphoneImNotifPolicy object.
  * @param policy #LinphoneImNotifPolicy object. @notnil
  * @return The user pointer associated with the #LinphoneImNotifPolicy object. @maybenil
-**/
+ **/
 LINPHONE_PUBLIC void *linphone_im_notif_policy_get_user_data(const LinphoneImNotifPolicy *policy);
 
 /**
  * Assign a user pointer to the #LinphoneImNotifPolicy object.
  * @param policy #LinphoneImNotifPolicy object. @notnil
  * @param user_data The user pointer to associate with the #LinphoneImNotifPolicy object. @maybenil
-**/
+ **/
 LINPHONE_PUBLIC void linphone_im_notif_policy_set_user_data(LinphoneImNotifPolicy *policy, void *user_data);
 
 /**
  * Clear an IM notif policy (deactivate all receiving and sending of notifications).
+ * Note: Error IMDN must be enabled for Lime recovery mechanism
  * @param policy #LinphoneImNotifPolicy object. @notnil
  */
 LINPHONE_PUBLIC void linphone_im_notif_policy_clear(LinphoneImNotifPolicy *policy);
@@ -131,6 +129,38 @@ LINPHONE_PUBLIC bool_t linphone_im_notif_policy_get_recv_imdn_delivered(const Li
 LINPHONE_PUBLIC void linphone_im_notif_policy_set_recv_imdn_delivered(LinphoneImNotifPolicy *policy, bool_t enable);
 
 /**
+ * Tell whether imdn delivery error notifications are being sent.
+ * @param policy #LinphoneImNotifPolicy object @notnil
+ * @return Boolean value telling whether imdn delivery error notifications are being sent.
+ */
+LINPHONE_PUBLIC bool_t linphone_im_notif_policy_get_send_imdn_delivery_error(const LinphoneImNotifPolicy *policy);
+
+/**
+ * Enable imdn delivery error notifications sending.
+ * Note: Error IMDN must be enabled for Lime recovery mechanism
+ * @param policy #LinphoneImNotifPolicy object @notnil
+ * @param enable Boolean value telling whether to send imdn delivery error notifications.
+ */
+LINPHONE_PUBLIC void linphone_im_notif_policy_set_send_imdn_delivery_error(LinphoneImNotifPolicy *policy,
+                                                                           bool_t enable);
+
+/**
+ * Tell whether imdn delivery error notifications are being notified when received.
+ * @param policy #LinphoneImNotifPolicy object @notnil
+ * @return Boolean value telling whether imdn delivery error notifications are being notified when received.
+ */
+LINPHONE_PUBLIC bool_t linphone_im_notif_policy_get_recv_imdn_delivery_error(const LinphoneImNotifPolicy *policy);
+
+/**
+ * Enable imdn delivery error notifications receiving.
+ * Note: Error IMDN must be enabled for Lime recovery mechanism
+ * @param policy #LinphoneImNotifPolicy object @notnil
+ * @param enable Boolean value telling whether to notify received imdn delivery error notifications.
+ */
+LINPHONE_PUBLIC void linphone_im_notif_policy_set_recv_imdn_delivery_error(LinphoneImNotifPolicy *policy,
+                                                                           bool_t enable);
+
+/**
  * Tell whether imdn displayed notifications are being sent.
  * @param policy #LinphoneImNotifPolicy object @notnil
  * @return Boolean value telling whether imdn displayed notifications are being sent.
@@ -161,7 +191,6 @@ LINPHONE_PUBLIC void linphone_im_notif_policy_set_recv_imdn_displayed(LinphoneIm
 /**
  * @}
  */
-
 
 #ifdef __cplusplus
 }
